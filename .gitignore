@@ -1,0 +1,20 @@
+# Ignorer la V0 (archive)
+V0/
+
+# Android
+**/.gradle/
+**/build/
+**/.idea/
+**/local.properties
+**/captures/
+**/*.iml
+**/.cxx/
+
+# PHP / IDE
+**/vendor/
+**/.vscode/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
