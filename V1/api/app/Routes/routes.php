@@ -28,14 +28,19 @@ $router->get('/api/spectacles/{id}',   [SpectacleController::class, 'show']);
 $router->get('/api/lieux',             [LieuController::class, 'index']);
 $router->get('/api/lieux/{id}',        [LieuController::class, 'show']);
 $router->get('/api/distances',         [LieuController::class, 'distances']);
-$router->get('/api/seances',           [SeanceController::class, 'index']);
+$router->get('/api/seances',                  [SeanceController::class, 'index']);
+$router->get('/api/spectacles/{id}/seances',  [SeanceController::class, 'bySpectacle']);
 $router->get('/api/jours',             [JoursController::class, 'index']);
 $router->get('/api/jours/{date}',      [JoursController::class, 'show']);
 
 // --- Visiteur ---
-$router->post('/api/visites',                  [VisiteController::class, 'create'],   [$visiteur]);
-$router->get ('/api/visites',                  [VisiteController::class, 'index'],    [$visiteur]);
-$router->get ('/api/visites/{id}/parcours',    [VisiteController::class, 'parcours'], [$visiteur]);
+$router->post  ('/api/parcours/preview',         [VisiteController::class, 'preview'],      [$visiteur]);
+$router->post  ('/api/visites',                  [VisiteController::class, 'create'],       [$visiteur]);
+$router->get   ('/api/visites',                  [VisiteController::class, 'index'],        [$visiteur]);
+$router->get   ('/api/visites/{id}/parcours',    [VisiteController::class, 'parcours'],     [$visiteur]);
+$router->get   ('/api/visites/{id}/carte',       [VisiteController::class, 'carte'],        [$visiteur]);
+$router->put   ('/api/visites/{id}/favori',      [VisiteController::class, 'updateFavori'], [$visiteur]);
+$router->delete('/api/visites/{id}',             [VisiteController::class, 'delete'],       [$visiteur]);
 
 // --- Gestionnaire ---
 $router->post  ('/api/admin/spectacles',       [SpectacleController::class, 'create'], [$gestion]);

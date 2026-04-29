@@ -9,6 +9,7 @@ public class Spectacle {
     public String dureeSpectacle;
     public String dureeAttente;
     public String lieuNom;
+    public String heureDebut; // renseigné quand construit depuis une séance
 
     public static Spectacle fromJson(JSONObject o) {
         Spectacle s = new Spectacle();
@@ -18,6 +19,7 @@ public class Spectacle {
         s.dureeSpectacle = o.optString("duree_spectacle");
         s.dureeAttente   = o.optString("duree_attente");
         s.lieuNom        = o.optString("lieu_nom");
+        s.heureDebut     = o.optString("heure_debut");
         return s;
     }
 }

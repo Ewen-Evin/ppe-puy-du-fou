@@ -12,6 +12,7 @@ public class Parcours {
         public int    ordre;
         public int    idSeance;
         public int    idSpectacle;
+        public String libelle;
         public String heureDebut;
         public String heureFin;
         public String heureArrivee;
@@ -21,6 +22,7 @@ public class Parcours {
             e.ordre        = o.optInt("ordre");
             e.idSeance     = o.optInt("id_seance");
             e.idSpectacle  = o.optInt("id_spectacle");
+            e.libelle      = o.optString("libelle");
             e.heureDebut   = o.optString("heure_debut");
             e.heureFin     = o.optString("heure_fin");
             e.heureArrivee = o.optString("heure_arrivee");
@@ -29,6 +31,7 @@ public class Parcours {
     }
 
     public boolean complet;
+    public boolean favori;
     public int     dureeMin;
     public int     attenteMin;
     public List<Etape> etapes = new ArrayList<>();
@@ -36,6 +39,7 @@ public class Parcours {
     public static Parcours fromJson(JSONObject o) {
         Parcours p = new Parcours();
         p.complet    = o.optBoolean("complet");
+        p.favori     = o.optBoolean("favori");
         p.dureeMin   = o.optInt("duree_totale_min");
         p.attenteMin = o.optInt("attente_min");
         JSONArray arr = o.optJSONArray("etapes");

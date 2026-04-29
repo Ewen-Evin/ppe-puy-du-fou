@@ -20,6 +20,9 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        androidx.appcompat.widget.Toolbar tb = findViewById(R.id.toolbar);
+        tb.setNavigationOnClickListener(v -> finish());
+
         emailInput    = findViewById(R.id.emailInput);
         passwordInput = findViewById(R.id.passwordInput);
         nomInput      = findViewById(R.id.nomInput);

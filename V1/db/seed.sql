@@ -13,16 +13,16 @@
 USE ppe_puy_du_fou;
 
 SET FOREIGN_KEY_CHECKS = 0;
-TRUNCATE TABLE Etape;
-TRUNCATE TABLE Parcours;
-TRUNCATE TABLE Choisir;
-TRUNCATE TABLE Visite;
-TRUNCATE TABLE Seance;
-TRUNCATE TABLE Spectacle;
-TRUNCATE TABLE Distance;
-TRUNCATE TABLE Lieu;
-TRUNCATE TABLE Jours;
-TRUNCATE TABLE Utilisateur;
+DELETE FROM Etape;
+DELETE FROM Parcours;
+DELETE FROM Choisir;
+DELETE FROM Visite;
+DELETE FROM Seance;
+DELETE FROM Spectacle;
+DELETE FROM Distance;
+DELETE FROM Lieu;
+DELETE FROM Jours;
+DELETE FROM Utilisateur;
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- ------------------------------------------------------------
@@ -40,52 +40,52 @@ INSERT INTO Utilisateur (email, mot_de_passe, nom, prenom, type_profil, vitesse_
 -- 21-30 : restaurants et points de service
 -- 31-40 : hôtels et hébergements de la Cité Nocturne
 -- ------------------------------------------------------------
-INSERT INTO Lieu (id_lieu, nom, coordonnees_gps) VALUES
+INSERT INTO Lieu (id_lieu, nom, coordonnees_gps, type_lieu) VALUES
 -- Grands lieux de spectacle
-(1,  'Stadium Gallo-Romain',                  '46.8911,-0.9295'),
-(2,  'Fort de l''An Mil',                      '46.8902,-0.9311'),
-(3,  'Théâtre du Bal des Oiseaux Fantômes',   '46.8898,-0.9278'),
-(4,  'Château du Puy du Fou',                  '46.8920,-0.9285'),
-(5,  'Cinéscénie - Grand Parc',               '46.8885,-0.9302'),
-(6,  'Théâtre du Mousquetaire de Richelieu',  '46.8893,-0.9288'),
-(7,  'Théâtre du Dernier Panache',            '46.8889,-0.9305'),
-(8,  'Lac des Noces de Feu',                   '46.8882,-0.9298'),
-(9,  'Frégate du Mystère de La Pérouse',      '46.8906,-0.9268'),
-(10, 'Le Premier Royaume',                     '46.8916,-0.9272'),
+(1,  'Stadium Gallo-Romain',                  '46.8911,-0.9295', 'spectacle'),
+(2,  'Fort de l''An Mil',                      '46.8902,-0.9311', 'spectacle'),
+(3,  'Théâtre du Bal des Oiseaux Fantômes',   '46.8898,-0.9278', 'spectacle'),
+(4,  'Château du Puy du Fou',                  '46.8920,-0.9285', 'spectacle'),
+(5,  'Cinéscénie - Grand Parc',               '46.8885,-0.9302', 'spectacle'),
+(6,  'Théâtre du Mousquetaire de Richelieu',  '46.8893,-0.9288', 'spectacle'),
+(7,  'Théâtre du Dernier Panache',            '46.8889,-0.9305', 'spectacle'),
+(8,  'Lac des Noces de Feu',                   '46.8882,-0.9298', 'spectacle'),
+(9,  'Frégate du Mystère de La Pérouse',      '46.8906,-0.9268', 'spectacle'),
+(10, 'Le Premier Royaume',                     '46.8916,-0.9272', 'spectacle'),
 -- Villages, zones thématiques et autres lieux de visite
-(11, 'Le Bourg 1900',                          '46.8908,-0.9265'),
-(12, 'La Cité Médiévale',                      '46.8895,-0.9290'),
-(13, 'Le Village du XVIIIe siècle',           '46.8915,-0.9270'),
-(14, 'Le Camp du Drap d''Or',                  '46.8923,-0.9282'),
-(15, 'Les Amoureux de Verdun',                 '46.8887,-0.9272'),
-(16, 'Le Mime et l''Étoile (Théâtre)',         '46.8910,-0.9263'),
-(17, 'L''Académie de Fauconnerie',             '46.8896,-0.9276'),
-(18, 'Le Conservatoire Animalier',             '46.8888,-0.9282'),
-(19, 'Le Grand Carrousel',                     '46.8918,-0.9275'),
-(20, 'Les Orgues de Feu',                      '46.8884,-0.9296'),
-(21, 'La Renaissance du Château',              '46.8921,-0.9286'),
-(22, 'Le Repaire des Enfants',                 '46.8904,-0.9281'),
+(11, 'Le Bourg 1900',                          '46.8908,-0.9265', 'zone'),
+(12, 'La Cité Médiévale',                      '46.8895,-0.9290', 'zone'),
+(13, 'Le Village du XVIIIe siècle',           '46.8915,-0.9270', 'zone'),
+(14, 'Le Camp du Drap d''Or',                  '46.8923,-0.9282', 'zone'),
+(15, 'Les Amoureux de Verdun',                 '46.8887,-0.9272', 'zone'),
+(16, 'Le Mime et l''Étoile (Théâtre)',         '46.8910,-0.9263', 'zone'),
+(17, 'L''Académie de Fauconnerie',             '46.8896,-0.9276', 'zone'),
+(18, 'Le Conservatoire Animalier',             '46.8888,-0.9282', 'zone'),
+(19, 'Le Grand Carrousel',                     '46.8918,-0.9275', 'zone'),
+(20, 'Les Orgues de Feu',                      '46.8884,-0.9296', 'zone'),
+(21, 'La Renaissance du Château',              '46.8921,-0.9286', 'zone'),
+(22, 'Le Repaire des Enfants',                 '46.8904,-0.9281', 'zone'),
 -- Place d'accueil et axes principaux
-(23, 'Place d''Accueil - Entrée du Parc',     '46.8900,-0.9300'),
-(24, 'Allée Centrale',                         '46.8902,-0.9292'),
+(23, 'Place d''Accueil - Entrée du Parc',     '46.8900,-0.9300', 'accueil'),
+(24, 'Allée Centrale',                         '46.8902,-0.9292', 'allee'),
 -- Restaurants
-(25, 'Le Café de la Madelon',                 '46.8909,-0.9266'),
-(26, 'L''Auberge de Poste',                    '46.8907,-0.9264'),
-(27, 'Le Bistrot',                             '46.8911,-0.9268'),
-(28, 'Les Deux Couronnes',                     '46.8896,-0.9289'),
-(29, 'Le Rendez-vous du Pêcheur',             '46.8905,-0.9269'),
-(30, 'La Halle Renaissance',                   '46.8919,-0.9284'),
-(31, 'Le Bouchon des Quais',                   '46.8907,-0.9267'),
-(32, 'Le Banquet du Roi',                      '46.8919,-0.9286'),
+(25, 'Le Café de la Madelon',                 '46.8909,-0.9266', 'restaurant'),
+(26, 'L''Auberge de Poste',                    '46.8907,-0.9264', 'restaurant'),
+(27, 'Le Bistrot',                             '46.8911,-0.9268', 'restaurant'),
+(28, 'Les Deux Couronnes',                     '46.8896,-0.9289', 'restaurant'),
+(29, 'Le Rendez-vous du Pêcheur',             '46.8905,-0.9269', 'restaurant'),
+(30, 'La Halle Renaissance',                   '46.8919,-0.9284', 'restaurant'),
+(31, 'Le Bouchon des Quais',                   '46.8907,-0.9267', 'restaurant'),
+(32, 'Le Banquet du Roi',                      '46.8919,-0.9286', 'restaurant'),
 -- Hôtels de la Cité Nocturne
-(33, 'Hôtel Le Logis de Lescure',             '46.8930,-0.9320'),
-(34, 'Hôtel La Villa Gallo-Romaine',          '46.8932,-0.9315'),
-(35, 'Hôtel La Citadelle',                     '46.8934,-0.9310'),
-(36, 'Hôtel Les Îles de Clovis',              '46.8928,-0.9322'),
-(37, 'Hôtel Le Camp du Drap d''Or',           '46.8926,-0.9318'),
-(38, 'Hôtel Le Grand Siècle',                  '46.8930,-0.9312'),
-(39, 'Hôtel Les Lavandières',                  '46.8929,-0.9316'),
-(40, 'Hôtel Le Préau',                         '46.8931,-0.9313');
+(33, 'Hôtel Le Logis de Lescure',             '46.8930,-0.9320', 'hotel'),
+(34, 'Hôtel La Villa Gallo-Romaine',          '46.8932,-0.9315', 'hotel'),
+(35, 'Hôtel La Citadelle',                     '46.8934,-0.9310', 'hotel'),
+(36, 'Hôtel Les Îles de Clovis',              '46.8928,-0.9322', 'hotel'),
+(37, 'Hôtel Le Camp du Drap d''Or',           '46.8926,-0.9318', 'hotel'),
+(38, 'Hôtel Le Grand Siècle',                  '46.8930,-0.9312', 'hotel'),
+(39, 'Hôtel Les Lavandières',                  '46.8929,-0.9316', 'hotel'),
+(40, 'Hôtel Le Préau',                         '46.8931,-0.9313', 'hotel');
 
 -- ------------------------------------------------------------
 -- Distances (graphe des allées du parc, en mètres)

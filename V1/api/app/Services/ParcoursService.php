@@ -29,9 +29,24 @@ final class ParcoursService
         if (!$visite) {
             return [];
         }
-        $date    = $visite['date_visite'];
-        $vitesse = (float)$visite['vitesse_marche']; // km/h
+        $spectacles = VisiteModel::spectaclesChoisis($idVisite);
+        if (!$spectacles) {
+            return [];
+        }
+        return $this->calculerDirect(
+            $visite['date_visite'],
+            (float)$visite['vitesse_marche'],
+            array_column($spectacles, 'id_spectacle')
+        );
+    }
 
+    /**
+     * Calcule les parcours sans nécessiter une visite enregistrée en base.
+     * @param array<int> $spectacleIds
+     * @return array<int, array{etapes:array, complet:bool, duree_totale_min:int, attente_min:int}>
+     */
+    public function calculerDirect(string $date, float $vitesse, array $spectacleIds): array
+    {
         $jour = JoursModel::find($date);
         if (!$jour) {
             return [];
@@ -39,16 +54,15 @@ final class ParcoursService
         $ouverture = $this->toMinutes($jour['heure_ouverture']);
         $fermeture = $this->toMinutes($jour['heure_fermeture']);
 
-        $spectacles = VisiteModel::spectaclesChoisis($idVisite);
-        if (!$spectacles) {
+        if (!$spectacleIds) {
             return [];
         }
 
         // Pour chaque spectacle, ses séances du jour
         $seancesParSpectacle = [];
-        foreach ($spectacles as $sp) {
-            $seancesParSpectacle[(int)$sp['id_spectacle']] = SeanceModel::bySpectacleAndDate(
-                (int)$sp['id_spectacle'], $date
+        foreach ($spectacleIds as $idSp) {
+            $seancesParSpectacle[(int)$idSp] = SeanceModel::bySpectacleAndDate(
+                (int)$idSp, $date
             );
         }
 
@@ -71,7 +85,6 @@ final class ParcoursService
         // Si aucun parcours complet, accepter les partiels (au moins 1 spectacle)
         $complets = array_filter($results, fn($p) => $p['complet']);
         if (!$complets && !$results) {
-            // Essayer parcours partiels en relâchant les contraintes
             $this->explorePartiel(
                 $seancesParSpectacle, $ouverture, $fermeture, $vitesse, $dist, $results
             );
@@ -197,6 +210,7 @@ final class ParcoursService
                 'ordre'         => $ordre++,
                 'id_seance'     => (int)$s['id_seance'],
                 'id_spectacle'  => (int)$s['id_spectacle'],
+                'libelle'       => $s['libelle'] ?? '',
                 'heure_debut'   => $s['heure_debut'],
                 'heure_fin'     => $s['heure_fin'],
                 'heure_arrivee' => $heureArrivee,

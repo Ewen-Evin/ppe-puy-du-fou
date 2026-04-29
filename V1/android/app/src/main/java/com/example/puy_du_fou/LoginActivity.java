@@ -83,6 +83,7 @@ public class LoginActivity extends AppCompatActivity {
                     session.save(
                             token,
                             u.getInt("id_utilisateur"),
+                            u.optString("email"),
                             u.optString("nom"),
                             u.optString("prenom"),
                             u.optDouble("vitesse_marche", 4.0)

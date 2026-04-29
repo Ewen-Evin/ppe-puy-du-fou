@@ -23,14 +23,17 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 public class SpectaclesActivity extends AppCompatActivity {
 
     private final List<Spectacle> spectacles = new ArrayList<>();
     private SpectacleAdapter adapter;
     private TextView dateText;
+    private TextView emptyText;
     private ProgressBar progress;
     private ApiClient api;
     private Session session;
@@ -42,13 +45,18 @@ public class SpectaclesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_spectacles);
 
+        // Sous-écran : flèche retour
+        androidx.appcompat.widget.Toolbar tb = findViewById(R.id.toolbar);
+        tb.setNavigationOnClickListener(v -> finish());
+
         api     = new ApiClient(this);
         session = new Session(this);
 
-        RecyclerView rv = findViewById(R.id.recycler);
-        progress  = findViewById(R.id.progress);
-        dateText  = findViewById(R.id.dateText);
-        Button btnDate    = findViewById(R.id.btnDate);
+        RecyclerView rv   = findViewById(R.id.recycler);
+        progress          = findViewById(R.id.progress);
+        emptyText         = findViewById(R.id.emptyText);
+        dateText          = findViewById(R.id.dateText);
+        Button btnDate     = findViewById(R.id.btnDate);
         Button btnCalculer = findViewById(R.id.btnCalculer);
 
         adapter = new SpectacleAdapter(spectacles);
@@ -64,6 +72,7 @@ public class SpectaclesActivity extends AppCompatActivity {
         btnDate.setOnClickListener(v -> new DatePickerDialog(this, (dp, y, m, d) -> {
             year = y; month = m; day = d;
             updateDateText();
+            loadSpectacles(); // recharger les séances pour la nouvelle date
         }, year, month, day).show());
 
         btnCalculer.setOnClickListener(v -> creerVisite());
@@ -77,7 +86,12 @@ public class SpectaclesActivity extends AppCompatActivity {
 
     private void loadSpectacles() {
         progress.setVisibility(View.VISIBLE);
-        api.get("/api/spectacles", resp -> {
+        emptyText.setVisibility(View.GONE);
+        spectacles.clear();
+        adapter.notifyDataSetChanged();
+
+        String date = dateText.getText().toString();
+        api.get("/api/seances?date=" + date, resp -> {
             progress.setVisibility(View.GONE);
             if (!resp.isSuccess() || resp.body == null) {
                 Toast.makeText(this, "Erreur chargement", Toast.LENGTH_SHORT).show();
@@ -85,11 +99,18 @@ public class SpectaclesActivity extends AppCompatActivity {
             }
             try {
                 JSONArray arr = new JSONArray(resp.body);
-                spectacles.clear();
+                // Dédupliquer : un spectacle peut avoir plusieurs séances le même jour
+                // On garde la première occurrence (heure la plus tôt, déjà triée par l'API)
+                Set<Integer> seen = new HashSet<>();
                 for (int i = 0; i < arr.length(); i++) {
-                    spectacles.add(Spectacle.fromJson(arr.getJSONObject(i)));
+                    JSONObject o = arr.getJSONObject(i);
+                    int idSp = o.optInt("id_spectacle");
+                    if (seen.add(idSp)) {
+                        spectacles.add(Spectacle.fromJson(o));
+                    }
                 }
                 adapter.notifyDataSetChanged();
+                emptyText.setVisibility(spectacles.isEmpty() ? View.VISIBLE : View.GONE);
             } catch (Exception e) {
                 Toast.makeText(this, "Format inattendu", Toast.LENGTH_SHORT).show();
             }
@@ -105,22 +126,27 @@ public class SpectaclesActivity extends AppCompatActivity {
             JSONArray ids = new JSONArray();
             for (Integer id : adapter.getSelectedIds()) ids.put(id);
 
+            String dateVisite = dateText.getText().toString();
             JSONObject body = new JSONObject()
-                    .put("date_visite", dateText.getText().toString())
+                    .put("date_visite", dateVisite)
                     .put("vitesse_marche", session.getVitesse())
                     .put("spectacles", ids);
 
             progress.setVisibility(View.VISIBLE);
-            api.post("/api/visites", body.toString(), resp -> {
+            api.post("/api/parcours/preview", body.toString(), resp -> {
                 progress.setVisibility(View.GONE);
                 if (!resp.isSuccess() || resp.body == null) {
-                    Toast.makeText(this, "Erreur création visite", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Erreur calcul parcours", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 try {
-                    int idVisite = new JSONObject(resp.body).getInt("id_visite");
+                    JSONArray parcours = new JSONObject(resp.body).getJSONArray("parcours");
                     Intent it = new Intent(this, ParcoursActivity.class);
-                    it.putExtra("id_visite", idVisite);
+                    it.putExtra("mode", "preview");
+                    it.putExtra("parcours_json", parcours.toString());
+                    it.putExtra("date_visite", dateVisite);
+                    it.putExtra("vitesse_marche", session.getVitesse());
+                    it.putExtra("spectacles_json", ids.toString());
                     startActivity(it);
                 } catch (Exception e) {
                     Toast.makeText(this, "Réponse inattendue", Toast.LENGTH_SHORT).show();

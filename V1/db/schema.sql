@@ -32,6 +32,7 @@ CREATE TABLE Lieu (
     id_lieu          INT AUTO_INCREMENT,
     nom              VARCHAR(100) NOT NULL,
     coordonnees_gps  VARCHAR(50)  NOT NULL,
+    type_lieu        ENUM('spectacle','zone','restaurant','hotel','accueil','allee') NOT NULL DEFAULT 'zone',
     PRIMARY KEY (id_lieu)
 ) ENGINE=InnoDB;
 
@@ -45,7 +46,7 @@ CREATE TABLE Distance (
     distance_metres  INT NOT NULL,
     PRIMARY KEY (id_lieu, id_lieu_1),
     FOREIGN KEY (id_lieu)   REFERENCES Lieu(id_lieu)   ON DELETE CASCADE,
-    FOREIGN KEY (id_lieu_1) REFERENCES Lieu(id_lieu_1) ON DELETE CASCADE,
+    FOREIGN KEY (id_lieu_1) REFERENCES Lieu(id_lieu)   ON DELETE CASCADE,
     CHECK (id_lieu <> id_lieu_1),
     CHECK (distance_metres > 0)
 ) ENGINE=InnoDB;
@@ -96,6 +97,7 @@ CREATE TABLE Seance (
 -- ------------------------------------------------------------
 CREATE TABLE Visite (
     id_visite        INT AUTO_INCREMENT,
+    nom_visite       VARCHAR(100) NULL,
     date_visite      DATE NOT NULL,
     vitesse_marche   DECIMAL(5,2) NOT NULL DEFAULT 4.00,
     id_utilisateur   INT NOT NULL,
@@ -124,6 +126,7 @@ CREATE TABLE Parcours (
     id_visite        INT NOT NULL,
     duree            TIME NOT NULL,
     est_complet      BOOLEAN NOT NULL DEFAULT FALSE,
+    est_favori       BOOLEAN NOT NULL DEFAULT FALSE,
     temps_attente    TIME NOT NULL DEFAULT '00:00:00',
     PRIMARY KEY (id_parcours),
     FOREIGN KEY (id_visite) REFERENCES Visite(id_visite) ON DELETE CASCADE,

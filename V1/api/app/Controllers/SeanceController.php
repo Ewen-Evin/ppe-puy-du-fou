@@ -14,6 +14,11 @@ final class SeanceController extends Controller
         return $this->json(SeanceModel::byDate($date));
     }
 
+    public function bySpectacle(array $ctx): array
+    {
+        return $this->json(SeanceModel::bySpectacle((int)$ctx['params']['id']));
+    }
+
     public function create(array $ctx): array
     {
         $d = $this->input();

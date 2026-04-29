@@ -7,16 +7,16 @@ use App\Core\Database;
 
 final class VisiteModel
 {
-    public static function create(int $idUser, string $date, float $vitesse, array $idsSpectacles): int
+    public static function create(int $idUser, string $date, float $vitesse, array $idsSpectacles, ?string $nomVisite = null): int
     {
         $pdo = Database::get();
         $pdo->beginTransaction();
         try {
             $s = $pdo->prepare(
-                'INSERT INTO Visite (date_visite, vitesse_marche, id_utilisateur)
-                 VALUES (:d,:v,:u)'
+                'INSERT INTO Visite (nom_visite, date_visite, vitesse_marche, id_utilisateur)
+                 VALUES (:n,:d,:v,:u)'
             );
-            $s->execute([':d' => $date, ':v' => $vitesse, ':u' => $idUser]);
+            $s->execute([':n' => $nomVisite, ':d' => $date, ':v' => $vitesse, ':u' => $idUser]);
             $idVisite = (int)$pdo->lastInsertId();
 
             $sc = $pdo->prepare('INSERT INTO Choisir (id_spectacle, id_visite) VALUES (:s,:v)');
@@ -47,6 +47,15 @@ final class VisiteModel
         );
         $s->execute([':v' => $idVisite]);
         return $s->fetchAll();
+    }
+
+    public static function delete(int $id, int $idUser): bool
+    {
+        $s = Database::get()->prepare(
+            'DELETE FROM Visite WHERE id_visite = :id AND id_utilisateur = :u'
+        );
+        $s->execute([':id' => $id, ':u' => $idUser]);
+        return $s->rowCount() > 0;
     }
 
     public static function byUser(int $idUser): array

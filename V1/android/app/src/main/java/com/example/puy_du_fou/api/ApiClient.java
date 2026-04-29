@@ -52,6 +52,10 @@ public class ApiClient {
         execute("PUT", path, jsonBody, cb);
     }
 
+    public void delete(String path, Callback cb) {
+        execute("DELETE", path, null, cb);
+    }
+
     private void execute(String method, String path, String body, Callback cb) {
         EXECUTOR.execute(() -> {
             ApiResponse result;

@@ -19,10 +19,22 @@ final class SeanceModel
         return $s->fetchAll();
     }
 
+    public static function bySpectacle(int $idSpectacle): array
+    {
+        $s = Database::get()->prepare(
+            'SELECT se.*, sp.libelle, sp.id_lieu, sp.duree_attente
+             FROM Seance se JOIN Spectacle sp ON sp.id_spectacle = se.id_spectacle
+             WHERE se.id_spectacle = :id
+             ORDER BY se.date_seance, se.heure_debut'
+        );
+        $s->execute([':id' => $idSpectacle]);
+        return $s->fetchAll();
+    }
+
     public static function bySpectacleAndDate(int $idSpectacle, string $date): array
     {
         $s = Database::get()->prepare(
-            'SELECT se.*, sp.id_lieu, sp.duree_attente
+            'SELECT se.*, sp.id_lieu, sp.duree_attente, sp.libelle
              FROM Seance se JOIN Spectacle sp ON sp.id_spectacle = se.id_spectacle
              WHERE se.id_spectacle = :id AND se.date_seance = :d
              ORDER BY se.heure_debut'
