@@ -1,6 +1,3 @@
-# Ignorer la V0 (archive)
-V0/
-
 # Android
 **/.gradle/
 **/build/
