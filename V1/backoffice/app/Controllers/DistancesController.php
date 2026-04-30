@@ -21,18 +21,26 @@ final class DistancesController extends Controller
     public function store(): void
     {
         $this->checkCsrf();
-        $this->api->post('/api/admin/distances', [
+        $resp = $this->api->post('/api/admin/distances', [
             'id_lieu'         => (int)($_POST['id_lieu'] ?? 0),
             'id_lieu_1'       => (int)($_POST['id_lieu_1'] ?? 0),
             'distance_metres' => (int)($_POST['distance_metres'] ?? 0),
         ]);
+        if (!$this->isOk($resp)) {
+            $this->redirect('/distances', $this->apiError($resp), 'danger');
+            return;
+        }
         $this->redirect('/distances', 'Distance créée');
     }
 
     public function delete(array $params): void
     {
         $this->checkCsrf();
-        $this->api->delete('/api/admin/distances/' . (int)$params['a'] . '/' . (int)$params['b']);
+        $resp = $this->api->delete('/api/admin/distances/' . (int)$params['a'] . '/' . (int)$params['b']);
+        if (!$this->isOk($resp)) {
+            $this->redirect('/distances', $this->apiError($resp), 'danger');
+            return;
+        }
         $this->redirect('/distances', 'Distance supprimée');
     }
 }

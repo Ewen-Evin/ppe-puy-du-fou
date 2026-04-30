@@ -10,8 +10,10 @@ final class SeanceController extends Controller
 {
     public function index(array $ctx): array
     {
-        $date = $_GET['date'] ?? date('Y-m-d');
-        return $this->json(SeanceModel::byDate($date));
+        if (!empty($_GET['date'])) {
+            return $this->json(SeanceModel::byDate($_GET['date']));
+        }
+        return $this->json(SeanceModel::all());
     }
 
     public function bySpectacle(array $ctx): array

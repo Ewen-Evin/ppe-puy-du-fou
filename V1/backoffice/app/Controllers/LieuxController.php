@@ -21,7 +21,11 @@ final class LieuxController extends Controller
     public function store(): void
     {
         $this->checkCsrf();
-        $this->api->post('/api/admin/lieux', $this->payload());
+        $resp = $this->api->post('/api/admin/lieux', $this->payload());
+        if (!$this->isOk($resp)) {
+            $this->redirect('/lieux/new', $this->apiError($resp), 'danger');
+            return;
+        }
         $this->redirect('/lieux', 'Lieu créé');
     }
 
@@ -34,14 +38,23 @@ final class LieuxController extends Controller
     public function update(array $params): void
     {
         $this->checkCsrf();
-        $this->api->put('/api/admin/lieux/' . (int)$params['id'], $this->payload());
+        $id = (int)$params['id'];
+        $resp = $this->api->put('/api/admin/lieux/' . $id, $this->payload());
+        if (!$this->isOk($resp)) {
+            $this->redirect('/lieux/' . $id . '/edit', $this->apiError($resp), 'danger');
+            return;
+        }
         $this->redirect('/lieux', 'Lieu mis à jour');
     }
 
     public function delete(array $params): void
     {
         $this->checkCsrf();
-        $this->api->delete('/api/admin/lieux/' . (int)$params['id']);
+        $resp = $this->api->delete('/api/admin/lieux/' . (int)$params['id']);
+        if (!$this->isOk($resp)) {
+            $this->redirect('/lieux', $this->apiError($resp), 'danger');
+            return;
+        }
         $this->redirect('/lieux', 'Lieu supprimé');
     }
 

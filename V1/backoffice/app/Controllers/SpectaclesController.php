@@ -22,7 +22,11 @@ final class SpectaclesController extends Controller
     public function store(): void
     {
         $this->checkCsrf();
-        $this->api->post('/api/admin/spectacles', $this->payload());
+        $resp = $this->api->post('/api/admin/spectacles', $this->payload());
+        if (!$this->isOk($resp)) {
+            $this->redirect('/spectacles/new', $this->apiError($resp), 'danger');
+            return;
+        }
         $this->redirect('/spectacles', 'Spectacle créé');
     }
 
@@ -36,14 +40,23 @@ final class SpectaclesController extends Controller
     public function update(array $params): void
     {
         $this->checkCsrf();
-        $this->api->put('/api/admin/spectacles/' . (int)$params['id'], $this->payload());
+        $id = (int)$params['id'];
+        $resp = $this->api->put('/api/admin/spectacles/' . $id, $this->payload());
+        if (!$this->isOk($resp)) {
+            $this->redirect('/spectacles/' . $id . '/edit', $this->apiError($resp), 'danger');
+            return;
+        }
         $this->redirect('/spectacles', 'Spectacle mis à jour');
     }
 
     public function delete(array $params): void
     {
         $this->checkCsrf();
-        $this->api->delete('/api/admin/spectacles/' . (int)$params['id']);
+        $resp = $this->api->delete('/api/admin/spectacles/' . (int)$params['id']);
+        if (!$this->isOk($resp)) {
+            $this->redirect('/spectacles', $this->apiError($resp), 'danger');
+            return;
+        }
         $this->redirect('/spectacles', 'Spectacle supprimé');
     }
 

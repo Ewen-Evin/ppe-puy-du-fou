@@ -14,9 +14,9 @@ final class DashboardController extends Controller
         $jours      = $this->api->get('/api/jours');
 
         $this->view('dashboard', [
-            'nbSpectacles' => is_array($spectacles) ? max(0, count($spectacles) - 1) : 0,
-            'nbLieux'      => is_array($lieux)      ? max(0, count($lieux) - 1)      : 0,
-            'nbJours'      => is_array($jours)      ? max(0, count($jours) - 1)      : 0,
+            'nbSpectacles' => $this->countItems($spectacles),
+            'nbLieux'      => $this->countItems($lieux),
+            'nbJours'      => $this->countItems($jours),
         ]);
     }
 }

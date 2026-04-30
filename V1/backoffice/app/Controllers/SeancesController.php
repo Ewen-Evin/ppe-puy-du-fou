@@ -9,9 +9,15 @@ final class SeancesController extends Controller
 {
     public function index(): void
     {
-        $date = $_GET['date'] ?? date('Y-m-d');
-        $items = $this->api->get('/api/seances?date=' . urlencode($date));
-        $this->view('seances/index', ['items' => $items, 'date' => $date]);
+        $date = $_GET['date'] ?? null;
+        $path = $date ? '/api/seances?date=' . urlencode($date) : '/api/seances';
+        $items = $this->api->get($path);
+        $spectacles = $this->api->get('/api/spectacles');
+        $this->view('seances/index', [
+            'items'      => $items,
+            'spectacles' => $spectacles,
+            'date'       => $date ?? '',
+        ]);
     }
 
     public function create(): void
@@ -23,15 +29,23 @@ final class SeancesController extends Controller
     public function store(): void
     {
         $this->checkCsrf();
-        $this->api->post('/api/admin/seances', $this->payload());
-        $this->redirect('/seances?date=' . urlencode($_POST['date_seance'] ?? date('Y-m-d')), 'Séance créée');
+        $resp = $this->api->post('/api/admin/seances', $this->payload());
+        if (!$this->isOk($resp)) {
+            $this->redirect('/seances/new', $this->apiError($resp), 'danger');
+            return;
+        }
+        $this->redirect('/seances?date=' . urlencode($_POST['date_seance'] ?? ''), 'Seance creee');
     }
 
     public function delete(array $params): void
     {
         $this->checkCsrf();
-        $this->api->delete('/api/admin/seances/' . (int)$params['id']);
-        $this->redirect('/seances', 'Séance supprimée');
+        $resp = $this->api->delete('/api/admin/seances/' . (int)$params['id']);
+        if (!$this->isOk($resp)) {
+            $this->redirect('/seances', $this->apiError($resp), 'danger');
+            return;
+        }
+        $this->redirect('/seances', 'Seance supprimee');
     }
 
     private function payload(): array

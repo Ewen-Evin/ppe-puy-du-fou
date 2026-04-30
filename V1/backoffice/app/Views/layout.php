@@ -34,7 +34,11 @@
     </aside>
     <main class="col-md-10">
       <?php if (!empty($flash)): ?>
-        <div class="alert alert-info"><?= htmlspecialchars($flash) ?></div>
+        <?php
+          $flashType = $_SESSION['flash_type'] ?? 'info';
+          unset($_SESSION['flash_type']);
+        ?>
+        <div class="alert alert-<?= $flashType ?>"><?= htmlspecialchars($flash) ?></div>
       <?php endif; ?>
       <?= $content ?>
     </main>

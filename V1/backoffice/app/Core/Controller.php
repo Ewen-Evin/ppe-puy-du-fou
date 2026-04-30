@@ -29,9 +29,12 @@ abstract class Controller
         require dirname(__DIR__) . '/Views/layout.php';
     }
 
-    protected function redirect(string $path, ?string $flash = null): void
+    protected function redirect(string $path, ?string $flash = null, string $type = 'success'): void
     {
-        if ($flash !== null) $_SESSION['flash'] = $flash;
+        if ($flash !== null) {
+            $_SESSION['flash'] = $flash;
+            $_SESSION['flash_type'] = $type;
+        }
         header('Location: ' . Router::url($path));
         exit;
     }
@@ -42,5 +45,25 @@ abstract class Controller
             http_response_code(403);
             exit('CSRF token invalide');
         }
+    }
+
+    protected function isOk(array $resp): bool
+    {
+        $code = $resp['_status'] ?? 0;
+        return $code >= 200 && $code < 300;
+    }
+
+    protected function apiError(array $resp): string
+    {
+        return $resp['error'] ?? $resp['_error'] ?? 'Erreur inconnue de l\'API';
+    }
+
+    protected function countItems(array $resp): int
+    {
+        $n = 0;
+        foreach ($resp as $k => $v) {
+            if (is_int($k) && is_array($v)) $n++;
+        }
+        return $n;
     }
 }

@@ -7,6 +7,16 @@ use App\Core\Database;
 
 final class SeanceModel
 {
+    public static function all(): array
+    {
+        $s = Database::get()->query(
+            'SELECT se.*, sp.libelle, sp.id_lieu, sp.duree_attente
+             FROM Seance se JOIN Spectacle sp ON sp.id_spectacle = se.id_spectacle
+             ORDER BY se.date_seance, se.heure_debut'
+        );
+        return $s->fetchAll();
+    }
+
     public static function byDate(string $date): array
     {
         $s = Database::get()->prepare(

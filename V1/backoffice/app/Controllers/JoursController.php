@@ -16,18 +16,26 @@ final class JoursController extends Controller
     public function store(): void
     {
         $this->checkCsrf();
-        $this->api->post('/api/admin/jours', [
+        $resp = $this->api->post('/api/admin/jours', [
             'id_jours'        => $_POST['id_jours'] ?? '',
             'heure_ouverture' => $_POST['heure_ouverture'] ?? '09:00:00',
             'heure_fermeture' => $_POST['heure_fermeture'] ?? '19:00:00',
         ]);
+        if (!$this->isOk($resp)) {
+            $this->redirect('/jours', $this->apiError($resp), 'danger');
+            return;
+        }
         $this->redirect('/jours', 'Jour enregistré');
     }
 
     public function delete(array $params): void
     {
         $this->checkCsrf();
-        $this->api->delete('/api/admin/jours/' . urlencode($params['date']));
+        $resp = $this->api->delete('/api/admin/jours/' . urlencode($params['date']));
+        if (!$this->isOk($resp)) {
+            $this->redirect('/jours', $this->apiError($resp), 'danger');
+            return;
+        }
         $this->redirect('/jours', 'Jour supprimé');
     }
 }

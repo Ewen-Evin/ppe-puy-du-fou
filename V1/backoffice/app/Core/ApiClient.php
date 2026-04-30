@@ -36,6 +36,7 @@ final class ApiClient
         $resp = curl_exec($ch);
         $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $err  = curl_error($ch);
+        curl_close($ch);
 
         if ($resp === false) {
             return ['_status' => 0, '_error' => $err];
