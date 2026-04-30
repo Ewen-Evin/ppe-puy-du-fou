@@ -2,5 +2,5 @@
     <string name="app_name">Puy du Fou</string>
 
     <!-- API : 10.0.2.2 = localhost de la machine hôte vu depuis l'émulateur Android -->
-    <string name="api_base_url">http://10.0.2.2:8000</string>
+    <string name="api_base_url">http://10.0.2.2/ppe-puy-du-fou/V1/api/public</string>
 </resources>
