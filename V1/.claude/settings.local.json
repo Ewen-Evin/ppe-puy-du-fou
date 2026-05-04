@@ -5,7 +5,12 @@
       "Bash(grep -n \"this->api\" \"C:/laragon/www/ppe-puy-du-fou/V1/backoffice/app/Controllers\"/*.php)",
       "Bash(curl:*)",
       "Bash(python -c \"import sys,json; data=json.load\\(sys.stdin\\); print\\(f'{len\\(data\\)} seances'\\); [print\\(f'  {s[\\\\\"date_seance\\\\\"]} {s[\\\\\"heure_debut\\\\\"]}-{s[\\\\\"heure_fin\\\\\"]} {s[\\\\\"libelle\\\\\"]}'\\) for s in data[:5]]\")",
-      "Bash(python -c \"import sys,json; data=json.load\\(sys.stdin\\); print\\(f'{len\\(data\\)} seances pour 2026-04-11'\\)\")"
+      "Bash(python -c \"import sys,json; data=json.load\\(sys.stdin\\); print\\(f'{len\\(data\\)} seances pour 2026-04-11'\\)\")",
+      "Bash(Get-ChildItem -Recurse -Name)",
+      "Bash(grep -E \"\\\\.\\(java|xml\\)$\")",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)"
     ]
   }
 }

@@ -68,7 +68,7 @@ Le fichier `V1/api/config/config.php` est déjà configuré pour Laragon (root, 
 
 **Le plus simple — sans vhost** : le projet est déjà dans `C:/laragon/www/`, donc l'API est accessible directement à :
 ```
-http://localhost/ppe_puy_du_fou/V1/api/public/api/health
+http://localhost/ppe-puy-du-fou/V1/api/public/api/health
 ```
 
 **Avec un vhost (plus propre)** :
