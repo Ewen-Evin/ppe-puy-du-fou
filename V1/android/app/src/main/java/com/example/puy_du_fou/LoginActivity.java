@@ -88,6 +88,7 @@ public class LoginActivity extends AppCompatActivity {
                             u.optString("prenom"),
                             u.optDouble("vitesse_marche", 4.0)
                     );
+                    session.saveTypeProfil(u.optString("type_profil", "visiteur"));
                     goToMain();
                 } catch (Exception e) {
                     Toast.makeText(this, "Erreur réponse serveur", Toast.LENGTH_SHORT).show();

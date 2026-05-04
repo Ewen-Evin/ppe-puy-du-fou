@@ -12,6 +12,11 @@
         android:title="Catalogue" />
 
     <item
+        android:id="@+id/nav_carte"
+        android:icon="@drawable/ic_nav_carte"
+        android:title="Carte" />
+
+    <item
         android:id="@+id/nav_historique"
         android:icon="@drawable/ic_nav_historique"
         android:title="Historique" />
@@ -20,10 +25,5 @@
         android:id="@+id/nav_profil"
         android:icon="@drawable/ic_nav_profil"
         android:title="Profil" />
-
-    <item
-        android:id="@+id/nav_carte"
-        android:icon="@drawable/ic_nav_carte"
-        android:title="Carte" />
 
 </menu>

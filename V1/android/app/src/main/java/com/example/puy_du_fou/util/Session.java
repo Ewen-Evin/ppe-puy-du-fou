@@ -15,6 +15,7 @@ public class Session {
     private static final String K_NOM     = "nom";
     private static final String K_PRENOM  = "prenom";
     private static final String K_VITESSE = "vitesse_marche";
+    private static final String K_TYPE    = "type_profil";
 
     private final SharedPreferences prefs;
 
@@ -33,12 +34,17 @@ public class Session {
                 .apply();
     }
 
-    public String getToken()  { return prefs.getString(K_TOKEN, null); }
-    public int    getUserId() { return prefs.getInt(K_USER_ID, 0); }
-    public String getEmail()  { return prefs.getString(K_EMAIL, ""); }
-    public String getNom()    { return prefs.getString(K_NOM, ""); }
-    public String getPrenom() { return prefs.getString(K_PRENOM, ""); }
-    public double getVitesse(){ return prefs.getFloat(K_VITESSE, 4.0f); }
+    public void saveTypeProfil(String type) {
+        prefs.edit().putString(K_TYPE, type).apply();
+    }
+
+    public String getToken()      { return prefs.getString(K_TOKEN, null); }
+    public int    getUserId()     { return prefs.getInt(K_USER_ID, 0); }
+    public String getEmail()      { return prefs.getString(K_EMAIL, ""); }
+    public String getNom()        { return prefs.getString(K_NOM, ""); }
+    public String getPrenom()     { return prefs.getString(K_PRENOM, ""); }
+    public double getVitesse()    { return prefs.getFloat(K_VITESSE, 4.0f); }
+    public String getTypeProfil() { return prefs.getString(K_TYPE, "visiteur"); }
 
     public boolean isLoggedIn() {
         String t = getToken();
