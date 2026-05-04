@@ -12,7 +12,8 @@
       "Bash(git commit -m ' *)",
       "Bash(git push *)",
       "Bash(python3 *)",
-      "Bash(python *)"
+      "Bash(python *)",
+      "PowerShell(Start-Process \"http://localhost/ppe-puy-du-fou/V1/backoffice/public/\")"
     ]
   }
 }
