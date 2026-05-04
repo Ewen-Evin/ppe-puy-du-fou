@@ -12,8 +12,15 @@
   </div>
   <div class="row">
     <div class="col-md-4 mb-2">
-      <label class="form-label">Date</label>
-      <input type="date" name="date_seance" class="form-control" required>
+      <label class="form-label">Date (jours d'ouverture)</label>
+      <select name="date_seance" class="form-select" required>
+        <option value="">--</option>
+        <?php foreach ($jours as $j): if (!is_array($j) || !isset($j['id_jours'])) continue; ?>
+          <option value="<?= htmlspecialchars($j['id_jours']) ?>">
+            <?= htmlspecialchars($j['id_jours']) ?> (<?= htmlspecialchars($j['heure_ouverture']) ?> – <?= htmlspecialchars($j['heure_fermeture']) ?>)
+          </option>
+        <?php endforeach; ?>
+      </select>
     </div>
     <div class="col-md-4 mb-2">
       <label class="form-label">Heure début</label>

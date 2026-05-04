@@ -11,11 +11,13 @@ final class SeancesController extends Controller
     {
         $date = $_GET['date'] ?? null;
         $path = $date ? '/api/seances?date=' . urlencode($date) : '/api/seances';
-        $items = $this->api->get($path);
+        $items      = $this->api->get($path);
         $spectacles = $this->api->get('/api/spectacles');
+        $jours      = $this->api->get('/api/jours');
         $this->view('seances/index', [
             'items'      => $items,
             'spectacles' => $spectacles,
+            'jours'      => $jours,
             'date'       => $date ?? '',
         ]);
     }
@@ -23,7 +25,8 @@ final class SeancesController extends Controller
     public function create(): void
     {
         $spectacles = $this->api->get('/api/spectacles');
-        $this->view('seances/form', ['item' => null, 'spectacles' => $spectacles]);
+        $jours      = $this->api->get('/api/jours');
+        $this->view('seances/form', ['item' => null, 'spectacles' => $spectacles, 'jours' => $jours]);
     }
 
     public function store(): void

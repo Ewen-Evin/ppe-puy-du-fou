@@ -32,19 +32,18 @@ Le code est dans `V1/`.
 
 ## 3. Base de données
 
-### 3.1 Importer le schéma et les données
+### 3.1 Importer la base de données
 
 Ouvrir **phpMyAdmin** depuis Laragon (clic droit sur l'icône Laragon → phpMyAdmin), puis :
 
 1. Aller dans l'onglet **Importer**
-2. Choisir le fichier `V1/db/schema.sql` → cliquer **Exécuter**
-3. Sélectionner la base `ppe_puy_du_fou` qui vient d'être créée (colonne de gauche)
-4. Aller dans **Importer** à nouveau → choisir `V1/db/seed.sql` → **Exécuter**
+2. Choisir le fichier `V1/db/ppe_puy_du_fou.sql` → cliquer **Exécuter**
+
+Le fichier crée automatiquement la base `ppe_puy_du_fou`, toutes les tables et les données de test.
 
 **Alternative en terminal** (depuis le dossier du projet) :
 ```bash
-mysql -u root < V1/db/schema.sql
-mysql -u root ppe_puy_du_fou < V1/db/seed.sql
+mysql -u root < V1/db/ppe_puy_du_fou.sql
 ```
 
 > Pas besoin de `-p` avec Laragon, le mot de passe root est vide par défaut.
@@ -191,7 +190,7 @@ Si les trois marchent, c'est bon.
 ### Hébergement mutualisé (OVH, Infomaniak, Hostinger…)
 
 1. Créer la base MySQL dans le panel de l'hébergeur
-2. Importer `schema.sql` puis `seed.sql` via phpMyAdmin
+2. Importer `ppe_puy_du_fou.sql` via phpMyAdmin (crée tables + données en un seul import)
 3. Uploader `V1/api/` et `V1/backoffice/` via FTP
 4. Configurer les DocumentRoot sur les dossiers `public/`
 5. Modifier `api/config/config.php` (credentials BDD + **secret JWT fort** : `openssl rand -hex 32`)
@@ -208,7 +207,7 @@ Si les trois marchent, c'est bon.
 
 ## 10. Checklist avant rendu
 
-- [ ] Base importée (schema + seed)
+- [ ] Base importée (`ppe_puy_du_fou.sql`)
 - [ ] API répond sur `/api/health`
 - [ ] Login gestionnaire OK sur le back-office
 - [ ] Login visiteur OK sur l'app Android

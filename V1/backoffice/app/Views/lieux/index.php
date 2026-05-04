@@ -3,12 +3,13 @@
   <a href="<?= $url('/lieux/new') ?>" class="btn btn-primary">+ Nouveau</a>
 </div>
 <table class="table table-striped bg-white shadow-sm">
-  <thead><tr><th>#</th><th>Nom</th><th>GPS</th><th></th></tr></thead>
+  <thead><tr><th>#</th><th>Nom</th><th>Type</th><th>GPS</th><th></th></tr></thead>
   <tbody>
   <?php foreach ($items as $l): if (!is_array($l) || !isset($l['id_lieu'])) continue; ?>
     <tr>
       <td><?= (int)$l['id_lieu'] ?></td>
       <td><?= htmlspecialchars($l['nom']) ?></td>
+      <td><?= htmlspecialchars($l['type_lieu'] ?? '') ?></td>
       <td><?= htmlspecialchars($l['coordonnees_gps']) ?></td>
       <td class="text-end">
         <a class="btn btn-sm btn-outline-secondary" href="<?= $url('/lieux/' . $l['id_lieu'] . '/edit') ?>">Éditer</a>

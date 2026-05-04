@@ -63,6 +63,7 @@ final class LieuxController extends Controller
         return [
             'nom'             => trim($_POST['nom'] ?? ''),
             'coordonnees_gps' => trim($_POST['coordonnees_gps'] ?? ''),
+            'type_lieu'       => $_POST['type_lieu'] ?? 'zone',
         ];
     }
 }

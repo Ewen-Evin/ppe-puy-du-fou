@@ -16,8 +16,15 @@
         </select>
       </div>
       <div class="mb-2">
-        <label class="form-label">Date</label>
-        <input type="date" name="date_seance" class="form-control" required value="<?= htmlspecialchars($date) ?>">
+        <label class="form-label">Date (jours d'ouverture)</label>
+        <select name="date_seance" class="form-select" required>
+          <option value="">--</option>
+          <?php foreach ($jours as $j): if (!is_array($j) || !isset($j['id_jours'])) continue; ?>
+            <option value="<?= htmlspecialchars($j['id_jours']) ?>" <?= $date === $j['id_jours'] ? 'selected' : '' ?>>
+              <?= htmlspecialchars($j['id_jours']) ?> (<?= htmlspecialchars($j['heure_ouverture']) ?> – <?= htmlspecialchars($j['heure_fermeture']) ?>)
+            </option>
+          <?php endforeach; ?>
+        </select>
       </div>
       <div class="row">
         <div class="col mb-2">
@@ -37,7 +44,14 @@
       <h5>Filtrer</h5>
       <div class="mb-2">
         <label class="form-label">Date</label>
-        <input type="date" name="date" value="<?= htmlspecialchars($date) ?>" class="form-control">
+        <select name="date" class="form-select">
+          <option value="">Toutes les dates</option>
+          <?php foreach ($jours as $j): if (!is_array($j) || !isset($j['id_jours'])) continue; ?>
+            <option value="<?= htmlspecialchars($j['id_jours']) ?>" <?= $date === $j['id_jours'] ? 'selected' : '' ?>>
+              <?= htmlspecialchars($j['id_jours']) ?>
+            </option>
+          <?php endforeach; ?>
+        </select>
       </div>
       <div class="d-flex gap-2">
         <button class="btn btn-outline-secondary flex-fill">Filtrer</button>

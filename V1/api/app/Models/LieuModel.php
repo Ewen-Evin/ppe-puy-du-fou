@@ -21,15 +21,15 @@ final class LieuModel
 
     public static function create(array $d): int
     {
-        $s = Database::get()->prepare('INSERT INTO Lieu (nom, coordonnees_gps) VALUES (:n, :g)');
-        $s->execute([':n' => $d['nom'], ':g' => $d['coordonnees_gps']]);
+        $s = Database::get()->prepare('INSERT INTO Lieu (nom, coordonnees_gps, type_lieu) VALUES (:n, :g, :t)');
+        $s->execute([':n' => $d['nom'], ':g' => $d['coordonnees_gps'], ':t' => $d['type_lieu'] ?? 'zone']);
         return (int)Database::get()->lastInsertId();
     }
 
     public static function update(int $id, array $d): void
     {
-        $s = Database::get()->prepare('UPDATE Lieu SET nom=:n, coordonnees_gps=:g WHERE id_lieu=:id');
-        $s->execute([':n' => $d['nom'], ':g' => $d['coordonnees_gps'], ':id' => $id]);
+        $s = Database::get()->prepare('UPDATE Lieu SET nom=:n, coordonnees_gps=:g, type_lieu=:t WHERE id_lieu=:id');
+        $s->execute([':n' => $d['nom'], ':g' => $d['coordonnees_gps'], ':t' => $d['type_lieu'] ?? 'zone', ':id' => $id]);
     }
 
     public static function delete(int $id): void
