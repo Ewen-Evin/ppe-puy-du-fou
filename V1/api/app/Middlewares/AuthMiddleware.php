@@ -12,7 +12,11 @@ final class AuthMiddleware
     {
         return function (array $context) use ($requiredRole): ?array {
             $headers = function_exists('getallheaders') ? getallheaders() : [];
-            $auth = $headers['Authorization'] ?? $headers['authorization'] ?? '';
+            $auth = $headers['Authorization']
+                 ?? $headers['authorization']
+                 ?? $_SERVER['HTTP_AUTHORIZATION']
+                 ?? $_SERVER['REDIRECT_HTTP_AUTHORIZATION']
+                 ?? '';
             if (!preg_match('/Bearer\s+(.+)/', $auth, $m)) {
                 http_response_code(401);
                 echo json_encode(['error' => 'Missing token']);
