@@ -186,17 +186,10 @@ public class HistoriqueActivity extends AppCompatActivity {
         new ApiClient(this).get("/api/visites", resp -> {
             progress.setVisibility(View.GONE);
             if (!resp.isSuccess()) {
-                if (resp.status == 0) {
-                    Toast.makeText(this, "Serveur inaccessible : " + resp.error, Toast.LENGTH_LONG).show();
-                } else if (resp.status == 401) {
-                    Toast.makeText(this, "Session expirée, reconnectez-vous", Toast.LENGTH_LONG).show();
-                    Intent loginIntent = new Intent(this, LoginActivity.class);
-                    loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(loginIntent);
-                } else {
-                    String detail = (resp.body != null && !resp.body.isEmpty()) ? resp.body : "(vide)";
-                    Toast.makeText(this, "Erreur " + resp.status + " : " + detail, Toast.LENGTH_LONG).show();
-                }
+                String msg = resp.status == 0
+                        ? "Serveur inaccessible : " + resp.error
+                        : "Erreur " + resp.status + " : " + (resp.body != null ? resp.body : "");
+                Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
                 return;
             }
             try {

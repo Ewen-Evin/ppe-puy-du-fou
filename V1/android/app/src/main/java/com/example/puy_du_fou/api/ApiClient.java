@@ -1,9 +1,11 @@
 package com.example.puy_du_fou.api;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 
+import com.example.puy_du_fou.LoginActivity;
 import com.example.puy_du_fou.R;
 import com.example.puy_du_fou.util.Session;
 
@@ -32,10 +34,12 @@ public class ApiClient {
     private static final ExecutorService EXECUTOR = Executors.newFixedThreadPool(4);
     private static final Handler MAIN = new Handler(Looper.getMainLooper());
 
-    private final String baseUrl;
+    private final String  baseUrl;
     private final Session session;
+    private final Context context;
 
     public ApiClient(Context ctx) {
+        this.context = ctx.getApplicationContext();
         this.baseUrl = ctx.getString(R.string.api_base_url);
         this.session = new Session(ctx);
     }
@@ -91,7 +95,17 @@ public class ApiClient {
                 if (conn != null) conn.disconnect();
             }
             final ApiResponse fr = result;
-            MAIN.post(() -> cb.onResult(fr));
+            MAIN.post(() -> {
+                // 401 : session expirée → déconnexion automatique
+                if (fr.status == 401) {
+                    session.clear();
+                    Intent it = new Intent(context, LoginActivity.class);
+                    it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    context.startActivity(it);
+                    return; // ne pas appeler le callback, l'activité est remplacée
+                }
+                cb.onResult(fr);
+            });
         });
     }
 

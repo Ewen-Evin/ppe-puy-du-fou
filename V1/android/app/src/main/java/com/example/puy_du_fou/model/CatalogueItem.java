@@ -4,7 +4,8 @@ public class CatalogueItem {
 
     public int    idLieu;
     public String nomLieu;
-    public String typeLieu;   // "spectacle", "zone", "restaurant", "hotel", "accueil"
+    public String typeLieu;        // "spectacle", "zone", "restaurant", "hotel", "accueil"
+    public String coordonneesGps;  // "lat,lng"
 
     // Rempli uniquement si un spectacle se déroule à ce lieu
     public Integer idSpectacle        = null;

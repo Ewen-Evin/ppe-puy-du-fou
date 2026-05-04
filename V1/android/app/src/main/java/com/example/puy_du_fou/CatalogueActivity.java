@@ -68,6 +68,7 @@ public class CatalogueActivity extends AppCompatActivity {
             i.putExtra("duree",        item.dureeSpectacle);
             i.putExtra("attente",      item.dureeAttente);
             i.putExtra("lieu",         item.nomLieu);
+            i.putExtra("coordonnees_gps", item.coordonneesGps);
             startActivity(i);
         });
         rv.setAdapter(adapter);
@@ -158,9 +159,10 @@ public class CatalogueActivity extends AppCompatActivity {
                 if ("allee".equals(type)) continue; // on masque les allées
 
                 CatalogueItem item = new CatalogueItem();
-                item.idLieu   = lieu.getInt("id_lieu");
-                item.nomLieu  = lieu.getString("nom");
-                item.typeLieu = type;
+                item.idLieu          = lieu.getInt("id_lieu");
+                item.nomLieu         = lieu.getString("nom");
+                item.typeLieu        = type;
+                item.coordonneesGps  = lieu.optString("coordonnees_gps", "");
 
                 JSONObject sp = spectacleByLieu.get(item.idLieu);
                 if (sp != null) {

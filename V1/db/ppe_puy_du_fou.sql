@@ -1,13 +1,15 @@
--- phpMyAdmin SQL Dump
--- version 5.2.0
--- https://www.phpmyadmin.net/
---
--- Host: localhost:3306
--- Generation Time: Apr 28, 2026 at 03:50 PM
--- Server version: 8.0.30
--- PHP Version: 8.1.10
+-- ============================================================
+-- PPE Puy du Fou - Dump complet (structure + données)
+-- Coordonnées GPS corrigées (Les Épesses, Vendée)
+-- Import : mysql -u root -p < ppe_puy_du_fou.sql
+-- ============================================================
+
+CREATE DATABASE IF NOT EXISTS `ppe_puy_du_fou`
+  CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE `ppe_puy_du_fou`;
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET FOREIGN_KEY_CHECKS = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -26,6 +28,17 @@ SET time_zone = "+00:00";
 --
 -- Table structure for table `choisir`
 --
+
+DROP TABLE IF EXISTS `etape`;
+DROP TABLE IF EXISTS `parcours`;
+DROP TABLE IF EXISTS `choisir`;
+DROP TABLE IF EXISTS `seance`;
+DROP TABLE IF EXISTS `spectacle`;
+DROP TABLE IF EXISTS `distance`;
+DROP TABLE IF EXISTS `lieu`;
+DROP TABLE IF EXISTS `visite`;
+DROP TABLE IF EXISTS `utilisateur`;
+DROP TABLE IF EXISTS `jours`;
 
 CREATE TABLE `choisir` (
   `id_spectacle` int NOT NULL,
@@ -220,46 +233,46 @@ CREATE TABLE `lieu` (
 --
 
 INSERT INTO `lieu` (`id_lieu`, `nom`, `coordonnees_gps`, `type_lieu`) VALUES
-(1, 'Stadium Gallo-Romain', '46.8911,-0.9295', 'spectacle'),
-(2, 'Fort de l\'An Mil', '46.8902,-0.9311', 'spectacle'),
-(3, 'Théâtre du Bal des Oiseaux Fantômes', '46.8898,-0.9278', 'spectacle'),
-(4, 'Château du Puy du Fou', '46.8920,-0.9285', 'spectacle'),
-(5, 'Cinéscénie - Grand Parc', '46.8885,-0.9302', 'spectacle'),
-(6, 'Théâtre du Mousquetaire de Richelieu', '46.8893,-0.9288', 'spectacle'),
-(7, 'Théâtre du Dernier Panache', '46.8889,-0.9305', 'spectacle'),
-(8, 'Lac des Noces de Feu', '46.8882,-0.9298', 'spectacle'),
-(9, 'Frégate du Mystère de La Pérouse', '46.8906,-0.9268', 'spectacle'),
-(10, 'Le Premier Royaume', '46.8916,-0.9272', 'spectacle'),
-(11, 'Le Bourg 1900', '46.8908,-0.9265', 'zone'),
-(12, 'La Cité Médiévale', '46.8895,-0.9290', 'zone'),
-(13, 'Le Village du XVIIIe siècle', '46.8915,-0.9270', 'zone'),
-(14, 'Le Camp du Drap d\'Or', '46.8923,-0.9282', 'zone'),
-(15, 'Les Amoureux de Verdun', '46.8887,-0.9272', 'zone'),
-(16, 'Le Mime et l\'Étoile (Théâtre)', '46.8910,-0.9263', 'zone'),
-(17, 'L\'Académie de Fauconnerie', '46.8896,-0.9276', 'zone'),
-(18, 'Le Conservatoire Animalier', '46.8888,-0.9282', 'zone'),
-(19, 'Le Grand Carrousel', '46.8918,-0.9275', 'zone'),
-(20, 'Les Orgues de Feu', '46.8884,-0.9296', 'zone'),
-(21, 'La Renaissance du Château', '46.8921,-0.9286', 'zone'),
-(22, 'Le Repaire des Enfants', '46.8904,-0.9281', 'zone'),
-(23, 'Place d\'Accueil - Entrée du Parc', '46.8900,-0.9300', 'accueil'),
-(24, 'Allée Centrale', '46.8902,-0.9292', 'allee'),
-(25, 'Le Café de la Madelon', '46.8909,-0.9266', 'restaurant'),
-(26, 'L\'Auberge de Poste', '46.8907,-0.9264', 'restaurant'),
-(27, 'Le Bistrot', '46.8911,-0.9268', 'restaurant'),
-(28, 'Les Deux Couronnes', '46.8896,-0.9289', 'restaurant'),
-(29, 'Le Rendez-vous du Pêcheur', '46.8905,-0.9269', 'restaurant'),
-(30, 'La Halle Renaissance', '46.8919,-0.9284', 'restaurant'),
-(31, 'Le Bouchon des Quais', '46.8907,-0.9267', 'restaurant'),
-(32, 'Le Banquet du Roi', '46.8919,-0.9286', 'restaurant'),
-(33, 'Hôtel Le Logis de Lescure', '46.8930,-0.9320', 'hotel'),
-(34, 'Hôtel La Villa Gallo-Romaine', '46.8932,-0.9315', 'hotel'),
-(35, 'Hôtel La Citadelle', '46.8934,-0.9310', 'hotel'),
-(36, 'Hôtel Les Îles de Clovis', '46.8928,-0.9322', 'hotel'),
-(37, 'Hôtel Le Camp du Drap d\'Or', '46.8926,-0.9318', 'hotel'),
-(38, 'Hôtel Le Grand Siècle', '46.8930,-0.9312', 'hotel'),
-(39, 'Hôtel Les Lavandières', '46.8929,-0.9316', 'hotel'),
-(40, 'Hôtel Le Préau', '46.8931,-0.9313', 'hotel');
+(1, 'Stadium Gallo-Romain', '46.8888,-0.9328', 'spectacle'),
+(2, 'Fort de l\'An Mil', '46.8872,-0.9362', 'spectacle'),
+(3, 'Théâtre du Bal des Oiseaux Fantômes', '46.8895,-0.9338', 'spectacle'),
+(4, 'Château du Puy du Fou', '46.8912,-0.9315', 'spectacle'),
+(5, 'Cinéscénie - Grand Parc', '46.8852,-0.9372', 'spectacle'),
+(6, 'Théâtre du Mousquetaire de Richelieu', '46.8882,-0.9342', 'spectacle'),
+(7, 'Théâtre du Dernier Panache', '46.8868,-0.9355', 'spectacle'),
+(8, 'Lac des Noces de Feu', '46.8858,-0.9368', 'spectacle'),
+(9, 'Frégate du Mystère de La Pérouse', '46.8898,-0.9322', 'spectacle'),
+(10, 'Le Premier Royaume', '46.8905,-0.9308', 'spectacle'),
+(11, 'Le Bourg 1900', '46.8892,-0.9318', 'zone'),
+(12, 'La Cité Médiévale', '46.8878,-0.9345', 'zone'),
+(13, 'Le Village du XVIIIe siècle', '46.8900,-0.9312', 'zone'),
+(14, 'Le Camp du Drap d\'Or', '46.8908,-0.9305', 'zone'),
+(15, 'Les Amoureux de Verdun', '46.8865,-0.9352', 'zone'),
+(16, 'Le Mime et l\'Étoile (Théâtre)', '46.8890,-0.9325', 'zone'),
+(17, 'L\'Académie de Fauconnerie', '46.8885,-0.9335', 'zone'),
+(18, 'Le Conservatoire Animalier', '46.8875,-0.9348', 'zone'),
+(19, 'Le Grand Carrousel', '46.8902,-0.9320', 'zone'),
+(20, 'Les Orgues de Feu', '46.8862,-0.9365', 'zone'),
+(21, 'La Renaissance du Château', '46.8910,-0.9318', 'zone'),
+(22, 'Le Repaire des Enfants', '46.8880,-0.9332', 'zone'),
+(23, 'Place d\'Accueil - Entrée du Parc', '46.8848,-0.9368', 'accueil'),
+(24, 'Allée Centrale', '46.8870,-0.9352', 'allee'),
+(25, 'Le Café de la Madelon', '46.8893,-0.9320', 'restaurant'),
+(26, 'L\'Auberge de Poste', '46.8868,-0.9358', 'restaurant'),
+(27, 'Le Bistrot', '46.8888,-0.9330', 'restaurant'),
+(28, 'Les Deux Couronnes', '46.8880,-0.9342', 'restaurant'),
+(29, 'Le Rendez-vous du Pêcheur', '46.8895,-0.9315', 'restaurant'),
+(30, 'La Halle Renaissance', '46.8908,-0.9310', 'restaurant'),
+(31, 'Le Bouchon des Quais', '46.8862,-0.9360', 'restaurant'),
+(32, 'Le Banquet du Roi', '46.8905,-0.9325', 'restaurant'),
+(33, 'Hôtel Le Logis de Lescure', '46.8928,-0.9300', 'hotel'),
+(34, 'Hôtel La Villa Gallo-Romaine', '46.8932,-0.9288', 'hotel'),
+(35, 'Hôtel La Citadelle', '46.8925,-0.9312', 'hotel'),
+(36, 'Hôtel Les Îles de Clovis', '46.8920,-0.9325', 'hotel'),
+(37, 'Hôtel Le Camp du Drap d\'Or', '46.8935,-0.9295', 'hotel'),
+(38, 'Hôtel Le Grand Siècle', '46.8930,-0.9305', 'hotel'),
+(39, 'Hôtel Les Lavandières', '46.8922,-0.9318', 'hotel'),
+(40, 'Hôtel Le Préau', '46.8918,-0.9330', 'hotel');
 
 -- --------------------------------------------------------
 
@@ -600,6 +613,7 @@ ALTER TABLE `spectacle`
 --
 ALTER TABLE `visite`
   ADD CONSTRAINT `visite_ibfk_1` FOREIGN KEY (`id_utilisateur`) REFERENCES `utilisateur` (`id_utilisateur`) ON DELETE CASCADE;
+SET FOREIGN_KEY_CHECKS = 1;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

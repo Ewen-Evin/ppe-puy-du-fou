@@ -1,6 +1,8 @@
 package com.example.puy_du_fou;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,9 +33,28 @@ public class SpectacleDetailActivity extends AppCompatActivity {
         String duree    = getIntent().getStringExtra("duree");
         String attente  = getIntent().getStringExtra("attente");
         String lieu     = getIntent().getStringExtra("lieu");
+        String gps      = getIntent().getStringExtra("coordonnees_gps");
 
         ((TextView) findViewById(R.id.titre)).setText(libelle);
         ((TextView) findViewById(R.id.lieu)).setText("📍 " + (lieu != null ? lieu : ""));
+
+        // Bouton "Y aller" → CarteActivity avec ce lieu comme destination
+        Button btnYAller = findViewById(R.id.btnYAller);
+        if (gps != null && !gps.isEmpty()) {
+            btnYAller.setOnClickListener(v -> {
+                String[] parts = gps.split(",");
+                if (parts.length == 2) {
+                    Intent it = new Intent(this, CarteActivity.class);
+                    it.putExtra("dest_lat",  Double.parseDouble(parts[0].trim()));
+                    it.putExtra("dest_lng",  Double.parseDouble(parts[1].trim()));
+                    it.putExtra("dest_nom",  lieu != null ? lieu : libelle);
+                    it.putExtra("dest_type", "spectacle");
+                    startActivity(it);
+                }
+            });
+        } else {
+            btnYAller.setVisibility(android.view.View.GONE);
+        }
         ((TextView) findViewById(R.id.duree)).setText("⏱ Durée : " + (duree != null ? duree : "—"));
         ((TextView) findViewById(R.id.attente)).setText("⏳ Temps d'attente moyen : " + (attente != null ? attente : "—"));
         ((TextView) findViewById(R.id.description)).setText(
