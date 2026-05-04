@@ -141,11 +141,7 @@ Aller sur `http://ppe-bo.test/login` et se connecter avec `admin@puydufou.fr` / 
 
 ### 6.2 Configurer l'URL de l'API
 
-Éditer `V1/android/app/src/main/res/values/strings.xml` :
-
-```xml
-<string name="api_base_url">http://10.0.2.2/ppe-puy-du-fou/V1/api/public</string>
-```
+Éditer `V1/android/app/src/main/res/values/strings.xml` si nécéssaire :
 
 > `10.0.2.2` = alias spécial de l'émulateur Android pour accéder au localhost du PC. Attention à bien utiliser des **tirets** (`ppe-puy-du-fou`) et non des underscores.
 
