@@ -328,6 +328,12 @@ public class CarteActivity extends AppCompatActivity
     private void enableLocationOverlay() {
         locationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(this), mapView);
         locationOverlay.enableMyLocation();
+
+        // Flèche de navigation bleue vive, visible sur la carte
+        android.graphics.Bitmap arrow = makeLocationArrow();
+        locationOverlay.setPersonIcon(arrow);
+        locationOverlay.setDirectionArrow(arrow, arrow);
+
         mapView.getOverlays().add(locationOverlay);
 
         locationOverlay.runOnFirstFix(() -> runOnUiThread(() -> {
@@ -337,6 +343,43 @@ public class CarteActivity extends AppCompatActivity
             }
             centerOnUser();
         }));
+    }
+
+    /**
+     * Flèche de navigation bleue avec contour noir, pointant vers le haut.
+     * OSMDroid la fait pivoter selon le cap du déplacement.
+     */
+    private android.graphics.Bitmap makeLocationArrow() {
+        float dp   = getResources().getDisplayMetrics().density;
+        int   size = (int)(40 * dp);
+        android.graphics.Bitmap bmp = android.graphics.Bitmap.createBitmap(
+                size, size, android.graphics.Bitmap.Config.ARGB_8888);
+        android.graphics.Canvas c = new android.graphics.Canvas(bmp);
+
+        float cx = size / 2f;
+        // Flèche simple : triangle avec encoche en bas
+        android.graphics.Path path = new android.graphics.Path();
+        path.moveTo(cx,           size * 0.05f); // pointe haut
+        path.lineTo(size * 0.85f, size * 0.90f); // bas-droit
+        path.lineTo(cx,           size * 0.65f); // encoche
+        path.lineTo(size * 0.15f, size * 0.90f); // bas-gauche
+        path.close();
+
+        // Remplissage bleu
+        android.graphics.Paint fill = new android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG);
+        fill.setColor(Color.parseColor("#1E88E5"));
+        fill.setStyle(android.graphics.Paint.Style.FILL);
+        c.drawPath(path, fill);
+
+        // Contour noir
+        android.graphics.Paint stroke = new android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG);
+        stroke.setColor(Color.BLACK);
+        stroke.setStyle(android.graphics.Paint.Style.STROKE);
+        stroke.setStrokeWidth(size * 0.06f);
+        stroke.setStrokeJoin(android.graphics.Paint.Join.ROUND);
+        c.drawPath(path, stroke);
+
+        return bmp;
     }
 
     private void centerOnUser() {
