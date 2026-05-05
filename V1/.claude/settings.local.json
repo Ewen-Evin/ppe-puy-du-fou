@@ -13,7 +13,15 @@
       "Bash(git push *)",
       "Bash(python3 *)",
       "Bash(python *)",
-      "PowerShell(Start-Process \"http://localhost/ppe-puy-du-fou/V1/backoffice/public/\")"
+      "PowerShell(Start-Process \"http://localhost/ppe-puy-du-fou/V1/backoffice/public/\")",
+      "Bash(Get-ChildItem -Recurse -Force)",
+      "Bash(Select-Object FullName)",
+      "Bash(Get-Item db\\\\mdc.lo1, db\\\\mdc.loo)",
+      "Bash(Select-Object Name, Length)",
+      "PowerShell(Get-ChildItem db\\\\mdc.lo1, db\\\\mdc.loo | ForEach-Object { \"$\\($_.Name\\) - $\\($_.Length\\) bytes\" })",
+      "Bash(git commit *)",
+      "Bash(git pull *)",
+      "Bash(git stash *)"
     ]
   }
 }
