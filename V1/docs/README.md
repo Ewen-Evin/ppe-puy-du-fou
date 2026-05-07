@@ -65,8 +65,9 @@ Le fichier SQL crée la base `ppe_puy_du_fou` avec le schéma complet et les don
 > **Comptes de test**
 > | Rôle | Email | Mot de passe |
 > |---|---|---|
-> | Visiteur | `visiteur@test.com` | `password123` |
-> | Gestionnaire | `admin@test.com` | `admin123` |
+> | Gestionnaire | `admin@puydufou.fr` | `password` |
+> | Visiteur | `jean.dupont@email.fr` | `password` |
+> | Visiteur | `marie.curie@email.fr` | `password` |
 
 ### 2. API REST
 
