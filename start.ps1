@@ -116,7 +116,7 @@ while (-not $ready -and $elapsed -lt $timeout) {
     Start-Sleep 1
     $elapsed++
     try {
-        $null = Invoke-WebRequest "http://localhost:$API_PORT/api/health" -UseBasicParsing -TimeoutSec 2
+        $null = Invoke-WebRequest "http://127.0.0.1:$API_PORT/api/health" -UseBasicParsing -TimeoutSec 2
         $ready = $true
     } catch { }
     Write-Host "." -NoNewline
