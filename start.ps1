@@ -80,7 +80,7 @@ $boLog  = "$ROOT\bo_server.log"
 Write-Host ""
 Write-Host "  Lancement de l'API sur le port $API_PORT ..."
 $apiProc = Start-Process $phpExe `
-    -ArgumentList "-S localhost:$API_PORT -t `"$API_DIR`" `"$API_INDEX`"" `
+    -ArgumentList "-S 0.0.0.0:$API_PORT -t `"$API_DIR`" `"$API_INDEX`"" `
     -RedirectStandardError $apiLog -WindowStyle Hidden -PassThru
 
 Write-Host "  Lancement du back-office sur le port $BO_PORT ..."

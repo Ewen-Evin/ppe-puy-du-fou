@@ -96,13 +96,14 @@ public class ApiClient {
             }
             final ApiResponse fr = result;
             MAIN.post(() -> {
-                // 401 : session expirée → déconnexion automatique
-                if (fr.status == 401) {
+                // 401 avec un token existant = session expirée → déconnexion automatique
+                // Sans token = tentative de login échouée → le callback gère l'affichage
+                if (fr.status == 401 && session.getToken() != null && !session.getToken().isEmpty()) {
                     session.clear();
                     Intent it = new Intent(context, LoginActivity.class);
                     it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     context.startActivity(it);
-                    return; // ne pas appeler le callback, l'activité est remplacée
+                    return;
                 }
                 cb.onResult(fr);
             });
