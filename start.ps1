@@ -28,6 +28,31 @@ if ($laragonPaths) {
     $mysqlExe = "mysql"
 }
 
+# --- Recherche de php.exe (Laragon ou PATH) ---
+$phpExe = $null
+$phpPaths = Get-ChildItem "C:\laragon\bin\php" -ErrorAction SilentlyContinue |
+    Where-Object { $_.PSIsContainer } |
+    ForEach-Object { "$($_.FullName)\php.exe" } |
+    Where-Object { Test-Path $_ }
+
+if ($phpPaths) {
+    $phpExe = $phpPaths | Select-Object -Last 1
+} elseif (Get-Command php -ErrorAction SilentlyContinue) {
+    $phpExe = (Get-Command php).Source
+}
+
+if (-not $phpExe) {
+    Write-Host "  ERREUR : php.exe introuvable. Verifie que Laragon est installe." -ForegroundColor Red
+    exit 1
+}
+
+# --- Recherche de Chrome ---
+$chromeExe = @(
+    "$env:ProgramFiles\Google\Chrome\Application\chrome.exe",
+    "${env:ProgramFiles(x86)}\Google\Chrome\Application\chrome.exe",
+    "$env:LOCALAPPDATA\Google\Chrome\Application\chrome.exe"
+) | Where-Object { Test-Path $_ } | Select-Object -First 1
+
 # --- Import de la base de donnees ---
 Write-Host ""
 if ($mysqlExe) {
@@ -43,21 +68,42 @@ if ($mysqlExe) {
 }
 
 # --- Mise a jour de l'api_base_url dans le back-office ---
+$utf8NoBom      = New-Object System.Text.UTF8Encoding $false
 $originalConfig = Get-Content $BO_CONFIG -Raw
 $updatedConfig  = $originalConfig -replace "('api_base_url'\s*=>\s*)'[^']*'", "'api_base_url' => 'http://localhost:$API_PORT'"
-Set-Content $BO_CONFIG $updatedConfig -Encoding UTF8
+[System.IO.File]::WriteAllText($BO_CONFIG, $updatedConfig, $utf8NoBom)
 
 # --- Lancement des serveurs en arriere-plan ---
+$apiLog = "$ROOT\api_server.log"
+$boLog  = "$ROOT\bo_server.log"
+
 Write-Host ""
 Write-Host "  Lancement de l'API sur le port $API_PORT ..."
-$apiProc = Start-Process php `
+$apiProc = Start-Process $phpExe `
     -ArgumentList "-S localhost:$API_PORT -t `"$API_DIR`" `"$API_INDEX`"" `
-    -PassThru -WindowStyle Minimized
+    -RedirectStandardError $apiLog -WindowStyle Hidden -PassThru
 
 Write-Host "  Lancement du back-office sur le port $BO_PORT ..."
-$boProc = Start-Process php `
+$boProc = Start-Process $phpExe `
     -ArgumentList "-S localhost:$BO_PORT -t `"$BO_DIR`" `"$BO_INDEX`"" `
-    -PassThru -WindowStyle Minimized
+    -RedirectStandardError $boLog -WindowStyle Hidden -PassThru
+
+Start-Sleep 2
+if ($apiProc.HasExited) {
+    Write-Host ""
+    Write-Host "  ERREUR : l'API a crashe au demarrage. Log :" -ForegroundColor Red
+    Get-Content $apiLog -ErrorAction SilentlyContinue | ForEach-Object { Write-Host "    $_" -ForegroundColor Red }
+    [System.IO.File]::WriteAllText($BO_CONFIG, $originalConfig, $utf8NoBom)
+    exit 1
+}
+if ($boProc.HasExited) {
+    Write-Host ""
+    Write-Host "  ERREUR : le back-office a crashe au demarrage. Log :" -ForegroundColor Red
+    Get-Content $boLog -ErrorAction SilentlyContinue | ForEach-Object { Write-Host "    $_" -ForegroundColor Red }
+    $apiProc.Kill()
+    [System.IO.File]::WriteAllText($BO_CONFIG, $originalConfig, $utf8NoBom)
+    exit 1
+}
 
 # --- Attente que l'API reponde ---
 Write-Host ""
@@ -87,14 +133,20 @@ if (-not $ready) {
     $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
     $apiProc.Kill()
     $boProc.Kill()
-    Set-Content $BO_CONFIG $originalConfig -Encoding UTF8
+    [System.IO.File]::WriteAllText($BO_CONFIG, $originalConfig, $utf8NoBom)
     exit 1
 }
 
 # --- Ouverture du navigateur ---
-Start-Process "http://localhost:$API_PORT/api/health"
-Start-Sleep 1
-Start-Process "http://localhost:$BO_PORT/login"
+if ($chromeExe) {
+    Start-Process $chromeExe "http://localhost:$API_PORT/api/health"
+    Start-Sleep 1
+    Start-Process $chromeExe "http://localhost:$BO_PORT/login"
+} else {
+    Start-Process "http://localhost:$API_PORT/api/health"
+    Start-Sleep 1
+    Start-Process "http://localhost:$BO_PORT/login"
+}
 
 # --- Infos ---
 Write-Host ""
@@ -118,8 +170,9 @@ $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
 # --- Nettoyage ---
 Write-Host ""
 Write-Host "  Arret des serveurs..."
-$apiProc.Kill()
-$boProc.Kill()
-Set-Content $BO_CONFIG $originalConfig -Encoding UTF8
+if (-not $apiProc.HasExited) { $apiProc.Kill() }
+if (-not $boProc.HasExited)  { $boProc.Kill() }
+Remove-Item $apiLog, $boLog -ErrorAction SilentlyContinue
+[System.IO.File]::WriteAllText($BO_CONFIG, $originalConfig, $utf8NoBom)
 Write-Host "  Config restauree. Bye !"
 Write-Host ""
